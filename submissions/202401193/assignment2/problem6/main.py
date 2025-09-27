@@ -101,7 +101,7 @@ TP: int = sum(
         # 4) TP = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p == self.positive_class)
   precision: float = TP / denominator
         # 5) FP = sum(1 for t, p in zip(y_true, y_pred) if t != self.positive_class and p == self.positive_class)
-return precision 
+  return precision 
         
 
 
