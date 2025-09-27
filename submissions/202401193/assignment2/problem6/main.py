@@ -15,7 +15,7 @@ class Metric(ABC):
         """
         # TODO: 지표 이름을 인스턴스 변수에 저장하세요
         # 힌트: self.name = name
-        raise NotImplementedError
+        self.name = name
 
     @abstractmethod
     def compute(self, y_true: list[int], y_pred: list[int]) -> float:
@@ -35,7 +35,8 @@ class Metric(ABC):
         # 힌트:
         # 1) score = self.compute(y_true, y_pred)
         # 2) return f"{self.name}: {score:.3f}"
-        raise NotImplementedError
+        score: float = self.compute(y_true, y_pred)
+        return f"{self.name}: {score:.3f}"
 
 
 class Accuracy(Metric):
@@ -45,7 +46,7 @@ class Accuracy(Metric):
         """
         # TODO: 부모 클래스 생성자를 호출하세요
         # 힌트: super().__init__("Accuracy")
-        raise NotImplementedError
+        super().__init__("Accuracy")
 
     def compute(self, y_true: list[int], y_pred: list[int]) -> float:
         """
@@ -54,9 +55,14 @@ class Accuracy(Metric):
         # TODO: 정확도를 계산하세요
         # 힌트:
         # 1) 빈 리스트인 경우 0.0 반환
+         total_samples: int = len(y_true)
+        if total_samples == 0:
+            return 0.0
         # 2) correct = sum(1 for t, p in zip(y_true, y_pred) if t == p)
+         correct_predictions: int = sum(1 for t, p in zip(y_true, y_pred) if t == p)
         # 3) return correct / len(y_true)
-        raise NotImplementedError
+        accuracy: float = correct_predictions / total_samples
+        return accuracy
 
 
 class Precision(Metric):
@@ -67,8 +73,9 @@ class Precision(Metric):
         # TODO: 부모 클래스 생성자 호출과 양성 클래스 저장
         # 힌트:
         # 1) super().__init__("Precision")
+        super().__init__("Precision")
         # 2) self.positive_class = positive_class
-        raise NotImplementedError
+         self.positive_class = positive_class
 
     def compute(self, y_true: list[int], y_pred: list[int]) -> float:
         """
@@ -77,11 +84,25 @@ class Precision(Metric):
         # TODO: 정밀도를 계산하세요
         # 힌트:
         # 1) TP = 실제 양성을 양성으로 예측한 수
+TP: int = sum(
+            1 for t, p in zip(y_true, y_pred) 
+            if t == self.positive_class and p == self.positive_class
+)
         # 2) FP = 실제 음성을 양성으로 예측한 수
+    FP: int = sum(
+            1 for t, p in zip(y_true, y_pred) 
+            if t != self.positive_class and p == self.positive_class
+        )
         # 3) 분모가 0이면 0.0 반환
+    denominator: int = TP + FP
+        if denominator == 0:
+            return 0.0
+
         # 4) TP = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p == self.positive_class)
+  precision: float = TP / denominator
         # 5) FP = sum(1 for t, p in zip(y_true, y_pred) if t != self.positive_class and p == self.positive_class)
-        raise NotImplementedError
+return precision 
+        
 
 
 class Recall(Metric):
@@ -92,8 +113,9 @@ class Recall(Metric):
         # TODO: 부모 클래스 생성자 호출과 양성 클래스 저장
         # 힌트:
         # 1) super().__init__("Recall")
+        super().__init__("Recall")
         # 2) self.positive_class = positive_class
-        raise NotImplementedError
+        self.positive_class = positive_class
 
     def compute(self, y_true: list[int], y_pred: list[int]) -> float:
         """
@@ -102,12 +124,25 @@ class Recall(Metric):
         # TODO: 재현율을 계산하세요
         # 힌트:
         # 1) TP = 실제 양성을 양성으로 예측한 수
-        # 2) FN = 실제 양성을 음성으로 예측한 수
-        # 3) 분모가 0이면 0.0 반환
-        # 4) TP = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p == self.positive_class)
-        # 5) FN = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p != self.positive_class)
-        raise NotImplementedError
+TP: int = sum(
+            1 for t, p in zip(y_true, y_pred) 
+            if t == self.positive_class and p == self.positive_class
+        )
 
+        # 2) FN = 실제 양성을 음성으로 예측한 수
+FN: int = sum(
+            1 for t, p in zip(y_true, y_pred) 
+            if t == self.positive_class and p != self.positive_class
+        )
+        # 3) 분모가 0이면 0.0 반환
+denominator: int = TP + FN
+        # 4) TP = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p == self.positive_class)
+if denominator == 0:
+            return 0.0
+        # 5) FN = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p != self.positive_class)
+
+recall: float = TP / denominator
+        return recall
 
 if __name__ == "__main__":
     # -------------------------------
@@ -159,5 +194,5 @@ if __name__ == "__main__":
 
         print("All Problem 6 tests passed.")
 
-    # run_tests()
+    run_tests()
     pass
