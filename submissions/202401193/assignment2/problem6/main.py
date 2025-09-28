@@ -55,11 +55,11 @@ class Accuracy(Metric):
         # TODO: 정확도를 계산하세요
         # 힌트:
         # 1) 빈 리스트인 경우 0.0 반환
-         total_samples: int = len(y_true)
+        total_samples: int = len(y_true)
         if total_samples == 0:
             return 0.0
         # 2) correct = sum(1 for t, p in zip(y_true, y_pred) if t == p)
-         correct_predictions: int = sum(1 for t, p in zip(y_true, y_pred) if t == p)
+        correct_predictions: int = sum(1 for t, p in zip(y_true, y_pred) if t == p)
         # 3) return correct / len(y_true)
         accuracy: float = correct_predictions / total_samples
         return accuracy
@@ -75,7 +75,7 @@ class Precision(Metric):
         # 1) super().__init__("Precision")
         super().__init__("Precision")
         # 2) self.positive_class = positive_class
-         self.positive_class = positive_class
+        self.positive_class = positive_class
 
     def compute(self, y_true: list[int], y_pred: list[int]) -> float:
         """
@@ -84,115 +84,20 @@ class Precision(Metric):
         # TODO: 정밀도를 계산하세요
         # 힌트:
         # 1) TP = 실제 양성을 양성으로 예측한 수
-TP: int = sum(
-            1 for t, p in zip(y_true, y_pred) 
+        TP: int = sum(
+            1 for t, p in zip(y_true, y_pred)
             if t == self.positive_class and p == self.positive_class
-)
+        )
         # 2) FP = 실제 음성을 양성으로 예측한 수
-    FP: int = sum(
-            1 for t, p in zip(y_true, y_pred) 
+        FP: int = sum(
+            1 for t, p in zip(y_true, y_pred)
             if t != self.positive_class and p == self.positive_class
         )
         # 3) 분모가 0이면 0.0 반환
-    denominator: int = TP + FP
+        denominator: int = TP + FP
         if denominator == 0:
             return 0.0
 
         # 4) TP = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p == self.positive_class)
-  precision: float = TP / denominator
-        # 5) FP = sum(1 for t, p in zip(y_true, y_pred) if t != self.positive_class and p == self.positive_class)
-  return precision 
-        
-
-
-class Recall(Metric):
-    def __init__(self, positive_class: int = 1) -> None:
-        """
-        재현율 지표 초기화.
-        """
-        # TODO: 부모 클래스 생성자 호출과 양성 클래스 저장
-        # 힌트:
-        # 1) super().__init__("Recall")
-        super().__init__("Recall")
-        # 2) self.positive_class = positive_class
-        self.positive_class = positive_class
-
-    def compute(self, y_true: list[int], y_pred: list[int]) -> float:
-        """
-        재현율 계산: TP / (TP + FN)
-        """
-        # TODO: 재현율을 계산하세요
-        # 힌트:
-        # 1) TP = 실제 양성을 양성으로 예측한 수
-TP: int = sum(
-            1 for t, p in zip(y_true, y_pred) 
-            if t == self.positive_class and p == self.positive_class
-        )
-
-        # 2) FN = 실제 양성을 음성으로 예측한 수
-FN: int = sum(
-            1 for t, p in zip(y_true, y_pred) 
-            if t == self.positive_class and p != self.positive_class
-        )
-        # 3) 분모가 0이면 0.0 반환
-denominator: int = TP + FN
-        # 4) TP = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p == self.positive_class)
-if denominator == 0:
-            return 0.0
-        # 5) FN = sum(1 for t, p in zip(y_true, y_pred) if t == self.positive_class and p != self.positive_class)
-
-recall: float = TP / denominator
-        return recall
-
-if __name__ == "__main__":
-    # -------------------------------
-    # Student self-checks (uncomment)
-    # -------------------------------
-    def run_tests():
-        # 테스트 데이터
-        y_true = [1, 0, 1, 1, 0, 1, 0, 0]
-        y_pred = [1, 0, 0, 1, 0, 1, 1, 0]
-
-        # 지표 객체 생성
-        accuracy = Accuracy()
-        precision = Precision(positive_class=1)
-        recall = Recall(positive_class=1)
-
-        # 상속 확인
-        assert isinstance(accuracy, Metric), "Accuracy should inherit from Metric"
-        assert isinstance(precision, Metric), "Precision should inherit from Metric"
-        assert isinstance(recall, Metric), "Recall should inherit from Metric"
-
-        # 정확도 테스트 (6/8 = 0.75)
-        acc_score = accuracy.compute(y_true, y_pred)
-        assert abs(acc_score - 0.75) < 0.01, f"Accuracy should be 0.75, got {acc_score}"
-
-        # 정밀도 테스트 (TP=3, FP=1, Precision=3/4=0.75)
-        prec_score = precision.compute(y_true, y_pred)
-        assert abs(prec_score - 0.75) < 0.01, f"Precision should be 0.75, got {prec_score}"
-
-        # 재현율 테스트 (TP=3, FN=1, Recall=3/4=0.75)
-        rec_score = recall.compute(y_true, y_pred)
-        assert abs(rec_score - 0.75) < 0.01, f"Recall should be 0.75, got {rec_score}"
-
-        # evaluate 메서드 테스트
-        acc_eval = accuracy.evaluate(y_true, y_pred)
-        assert "Accuracy: 0.750" in acc_eval, f"Accuracy evaluate format wrong: {acc_eval}"
-
-        # 다형성 테스트
-        metrics = [accuracy, precision, recall]
-        for metric in metrics:
-            result = metric.evaluate(y_true, y_pred)
-            assert ":" in result, f"Evaluate result should contain colon: {result}"
-
-        # 추상 클래스 직접 인스턴스화 불가 테스트
-        try:
-            metric = Metric("Test")
-            assert False, "Should not be able to instantiate abstract class"
-        except TypeError:
-            pass  # Expected
-
-        print("All Problem 6 tests passed.")
-
-    run_tests()
-    pass
+        precision: float = TP / denominator
+        # 5) FP = sum(1 for t, p in zip(y_true, y_pred) if t != self.positive_class and p == self.positive_
