@@ -21,7 +21,7 @@ class Accumulator:
         """
         # TODO: 내부 total 값을 반환하세요
         # 힌트: return self._total
-       return self._total 
+        return self._total
 
     @total.setter
     def total(self, value: float) -> None:
@@ -32,7 +32,7 @@ class Accumulator:
         # 힌트: raise AssertionError("적절한 에러 메시지")
         raise AssertionError("Accumulator의 total은 읽기 전용입니다. `add` 메서드를 사용하세요.")
 
-        
+
     def add(self, x: float) -> float:
         """
         Add x to the accumulator and return the new total.
@@ -48,7 +48,7 @@ class Accumulator:
         """
         # TODO: 내부 total을 0.0으로 리셋하세요
         # 힌트: self._total = 0.0
-       self._total = 0.0
+        self._total = 0.0
 
 
 if __name__ == "__main__":
@@ -75,5 +75,5 @@ if __name__ == "__main__":
             ok = True
         assert ok, "total setter must block direct assignment"
 
-  
-  run_tests()
+
+    run_tests()
