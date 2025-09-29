@@ -3,12 +3,10 @@ def word_tokens(s: str) -> list[str]:
     Split on single spaces; empty/whitespace-only -> [].
     Assume `s` is already normalized by clean_text.
     """
-    # TODO: 구현하세요
-    
-if not (s == "" or s.strip() == ""):
-        li = s.split(" ")
-    else:
+    if not s or s.strip() == "":
         li = []
+    else:
+        li = s.split(" ")
 
     return li
 
@@ -22,4 +20,3 @@ if __name__ == "__main__":
         print("word.py tests passed.")
     
     run_tests()
-   
