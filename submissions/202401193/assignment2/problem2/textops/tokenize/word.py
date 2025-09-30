@@ -3,11 +3,11 @@ def word_tokens(s: str) -> list[str]:
     Split on single spaces; empty/whitespace-only -> [].
     Assume `s` is already normalized by clean_text.
     """
- if not (s == "" or s.strip() == ""):
+    if s and s.strip():
         li = s.split(" ")
- else:
+    else:
         li = []
-return li
+    return li
 
 # 이 파트 제미나이의 도움을 받았습니다
 
