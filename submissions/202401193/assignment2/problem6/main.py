@@ -89,16 +89,14 @@ class Precision(Metric):
             if t == self.positive_class and p == self.positive_class
         )
         # 2) FP = 실제 음성을 양성으로 예측한 수
-        # 주의: 정밀도 공식은 TP / (TP + FP)이며, FP는 실제 **음성**인데 **양성**으로 예측한 경우입니다.
-        # "남의 코드"의 FP 주석은 사실과 다르게 보일 수 있으나 (t==positive_class가 아님)
-        # "남의 코드"의 FP 계산 로직은 정밀도 계산을 위해 TP + FP를 구하는 과정에서 오류가 있었습니다.
         # 올바른 정밀도 분모 (TP + FP)를 위해, '양성으로 예측된 모든 경우'를 계산하고, 그중 실제 양성인 경우 (TP)를 나누어 계산합니다.
-        
         # '양성으로 예측된 수' (Predicted Positives) = TP + FP
         predicted_positives: int = sum(
             1 for t, p in zip(y_true, y_pred)
             if p == self.positive_class # 양성으로 예측
         )
+        # 코드를 수정할 때 제미나이의 도움을 받았습니다.
+
         
         # 3) 분모가 0이면 0.0 반환
         denominator: int = predicted_positives 
